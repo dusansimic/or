@@ -1,9 +1,16 @@
-code_seg    SEGMENT
-        ASSUME cs:code_seg
+data    segment
+        broj1   dw      14
+        broj2   dw      3
+ends
 
-; Startni deo i ucitavanje brojeva u registre 
-start:  mov ax, 14
-        mov bx, 3
+code    segment
+
+; Startni deo i ucitavanje brojeva u registre
+start:  mov dx, data
+        mov ds, dx
+
+        mov ax, broj1
+        mov bx, broj2
 
         ; Sabiranje dva broja
         add ax, bx
@@ -26,5 +33,6 @@ start:  mov ax, 14
 
 kraj:   jmp kraj
 
-code_seg    ENDS
-END
+ends
+
+end start
