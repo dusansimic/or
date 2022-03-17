@@ -1,1 +1,4 @@
-**/*.bin
+**
+!**/*.asm
+!LICENSE
+!.gitignore
