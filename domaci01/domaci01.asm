@@ -4,6 +4,7 @@ data    segment
 ends
 
 code    segment
+        assume cs:code, ds:data
 
 ; Startni deo i ucitavanje brojeva u registre
 start:  mov dx, data
