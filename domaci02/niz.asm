@@ -208,11 +208,11 @@ obrni proc
 
     mov bp, sp    
     ; ucitavanje adrese destinacionog niza
-    1mov di, [bp+14]
+    mov di, [bp+14]
     ; ispravljanje adrese za destinacioni niz
     ; TODO: ne znam zasto ovo mora da se uradi
     ; iz nekog razloga postavi sve jedenici na gornje bitove
-    sub di, 0xFF00
+    ;sub di, 0xFF00
     ; ucitavanje adrese izvornog niza
     mov si, [bp+16]
     ; ucitavanje duzine i kraja niza
@@ -238,7 +238,7 @@ obrn:
     pop cx
     pop bx
     pop ax
-    ret 4
+    ret 6
 obrni endp
 
 start:
@@ -280,7 +280,14 @@ ucit:
     
     push s
     push offset niz
-    push offset nizobrn
+    ; iz nekog razloga pushovanje offseta promenljive
+    ; konkretno u slucaju nizobrn postavi gornje bitove na 1
+    ; i to se mora popravljati
+    ;push offset nizobrn
+    ; resenje je ili popraviti ili ucitati adresu u ax
+    ; registar pa onda njega gurnuti
+    lea ax, nizobrn
+    push ax
     call obrni
     
     call novi_red
