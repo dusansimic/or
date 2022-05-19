@@ -67,6 +67,8 @@ novi_red proc
     ret
 novi_red endp
 
+; modifikovana procedura za citanje stringa koja vraca
+; duzinu ucitanog stringa kao preostali element na stack-u
 rstr proc
     ; skladistenje trenutnih stanja registara
     ; ukupno je zauzeto 10 bajtova
@@ -116,28 +118,43 @@ palindrom proc
     push si
     push di
     push bp
+
+    ; ucitati indeks levog i desnog slova koje se poredi
     mov bp, sp
     mov si, [bp+16]
     mov di, [bp+14]
+    ; provera da li su se indeksi dodirnuli
     cmp si, di
     jbe cmpr_pal
     jmp kraj_rek
 
 cmpr_pal:
+    ; ucitavanje levog i desnog slova
     mov al, [si]
     mov bl, [di]
+    ; poredjenje slova (da li je palindrom do ovde)
     cmp al, bl
+    ; ako su isti, nastavlja se rekurzija
     je cont_pal
+    ; ako nisu, postaviti da je resenje false (0)
     mov [bp+18], 0
+    ; prekid rekurzije
     jmp kraj_rek
 
 cont_pal:
+    ; povecianje i smanjivanje indeksa
     inc si
     dec di
+    ; pushovanje parametara rekurzije na stack
+    ; posto je za sada string palindrom, resenje je true
     push 1
     push si
     push di
     call palindrom
+    ; kad se vraca iz rekurzije, indeksi su uklonjeni sa
+    ; stack-a i sp pokazuje na resenje
+    ; to resenje se skida sa stack-a i stavlja u resenje
+    ; prethodne iteracije
     pop dx
     mov [bp+18], dx
     
@@ -148,6 +165,8 @@ kraj_rek:
     pop dx
     pop bx
     pop ax
+    ; brisu se samo 2 elementa (4 bajta) sa stack-a jer su to
+    ; indeksi a zelimo da sacuvamo resenje
     ret 4
 palindrom endp
 
@@ -161,21 +180,28 @@ start:
     
     wstr prompt0
     
+    ; gura se duzina stringa kao parametar
+    ; (bice dobijen automatski)
     push n
     push 100
     push offset str
     call rstr
+    ; duzina niza je preostala na stack-u
     pop n
     
     call novi_red
     
+    ; na pocetku je resenje true
     push 1
+    ; pushvoanje adrese stringa (pocetak)
     push offset str
+    ; racunanje kraja stringa
     lea dx, str
     add dx, n
     dec dx
     push dx
     call palindrom
+    ; resenje je poslednje ostalo na stack-u
     pop dx
     cmp dx, 0
     jnz jeste_pal
