@@ -2,7 +2,7 @@
 
 data segment
     ; add your data here!
-    str db "                             "
+    str db "                              "
     strn db "       "
     n dw 0
     prompt0 db "Unesite string: $"
@@ -183,7 +183,7 @@ start:
     ; gura se duzina stringa kao parametar
     ; (bice dobijen automatski)
     push n
-    push 100
+    push 29
     push offset str
     call rstr
     ; duzina niza je preostala na stack-u
